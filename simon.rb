@@ -4,17 +4,17 @@ require_relative "game"
 
 game = Game.new(
   red: {
-  led: Led.new(25),
-  button: Button.new(22)
-},
+    led: Led.new(25),
+    button: Button.new(22)
+  },
   green: {
-  led: Led.new(24),
-  button: Button.new(17)
-},
+    led: Led.new(24),
+    button: Button.new(17)
+  },
   blue: {
-  led: Led.new(23),
-  button: Button.new(4)
-})
+    led: Led.new(23),
+    button: Button.new(4)
+  })
 
 at_exit do
   game.leds.each { |l| l.off }
