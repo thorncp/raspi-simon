@@ -26,14 +26,13 @@ end
 
 puts "alive..."
 
-things = 0
+game.start
 
 loop do
-  things += 1
-  pattern = things.times.map { game.colors.sample }
-  p pattern
+  round = game.next_round
 
-  pattern.each do |color|
+  p round.pattern
+  round.pattern.each do |color|
     led = game.led_for(color)
     led.on
     sleep 1
@@ -41,5 +40,3 @@ loop do
     sleep 1
   end
 end
-
-# PiPiper.wait
