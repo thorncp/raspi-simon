@@ -1,7 +1,8 @@
 require_relative "led"
 require_relative "button"
+require_relative "game"
 
-game = {
+game = Game.new(
   red: {
     led: Led.new(25),
     button: Button.new(22)
@@ -13,19 +14,14 @@ game = {
   blue: {
     led: Led.new(23),
     button: Button.new(4)
-  }
-}
+  })
 
 at_exit do
-  game.each do |_, stuff|
-    stuff[:led].off
-  end
+  game.leds.each { |l| l.off }
 end
 
-game.each do |color, stuff|
-  stuff[:button].pushed do
-    stuff[:led].toggle
-  end
+game.pairs.each do |led, button|
+  button.pushed { led.toggle }
 end
 
 puts "alive..."
@@ -34,14 +30,14 @@ things = 0
 
 loop do
   things += 1
-  pattern = things.times.map { game.keys.sample }
+  pattern = things.times.map { game.colors.sample }
   p pattern
 
   pattern.each do |color|
-    stuff = game[color]
-    stuff[:led].on
+    led = game.led_for(color)
+    led.on
     sleep 1
-    stuff[:led].off
+    led.off
     sleep 1
   end
 end
