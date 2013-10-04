@@ -1,34 +1,30 @@
-require "pi_piper"
+require_relative "led"
+require_relative "button"
 
-include PiPiper
-
-red_led = PiPiper::Pin.new(pin: 25, direction: :out)
-green_led = PiPiper::Pin.new(pin: 24, direction: :out)
-blue_led = PiPiper::Pin.new(pin: 23, direction: :out)
+game = {
+  red: {
+    led: Led.new(25),
+    button: Button.new(22)
+  },
+  green: {
+    led: Led.new(24),
+    button: Button.new(17)
+  },
+  blue: {
+    led: Led.new(23),
+    button: Button.new(4)
+  }
+}
 
 at_exit do
-  red_led.off
-  green_led.off
-  blue_led.off
+  game.each do |_, stuff|
+    stuff[:led].off
+  end
 end
 
-red_button = 22
-green_button = 17
-blue_button = 4
-
-colors = [:red, :green, :blue].freeze
-
-colors.each do |color|
-  button = eval("#{color}_button")
-  led = eval("#{color}_led")
-
-  after pin: button, goes: :low do
-    led.read
-    if led.on?
-      led.off
-    else
-      led.on
-    end
+game.each do |color, stuff|
+  stuff[:button].pushed do
+    stuff[:led].toggle
   end
 end
 
@@ -38,14 +34,14 @@ things = 0
 
 loop do
   things += 1
-  pattern = things.times.map { colors.sample }
+  pattern = things.times.map { game.keys.sample }
   p pattern
 
   pattern.each do |color|
-    led = eval("#{color}_led")
-    led.on
+    stuff = game[color]
+    stuff[:led].on
     sleep 1
-    led.off
+    stuff[:led].off
     sleep 1
   end
 end
