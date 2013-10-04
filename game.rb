@@ -36,4 +36,18 @@ class Game
       rounds << round
     end
   end
+
+  def current_round
+    rounds.last
+  end
+
+  def show_pattern
+    current_round.pattern.each do |color|
+      led = led_for(color)
+      led.on
+      sleep 1
+      led.off
+      sleep 1
+    end
+  end
 end
