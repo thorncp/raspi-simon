@@ -1,9 +1,8 @@
 class Game
-  attr_reader :stuff, :rounds, :pattern
+  attr_reader :stuff, :pattern
 
   def initialize(stuff)
     @stuff = stuff
-    @rounds = []
     @pattern = []
   end
 
@@ -67,10 +66,6 @@ class Game
 
   def color_from_button(button)
     stuff.keys.find { |k| stuff[k][:button] == button }
-  end
-
-  def current_round
-    rounds.last
   end
 
   def show_pattern
