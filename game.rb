@@ -1,11 +1,10 @@
-require_relative "round"
-
 class Game
-  attr_reader :stuff, :rounds
+  attr_reader :stuff, :rounds, :pattern
 
   def initialize(stuff)
     @stuff = stuff
     @rounds = []
+    @pattern = []
   end
 
   def leds
@@ -27,14 +26,47 @@ class Game
   def start
   end
 
+  def waiting?
+    !!@waiting
+  end
+
+  def player_turn
+    @player_turn = true
+    while waiting?
+      sleep 1
+    end
+    @player_turn = false
+  end
+
   def player_turn?
     !!@player_turn
   end
 
   def next_round
-    Round.new(rounds.size + 1, colors).tap do |round|
-      rounds << round
+    @current_index = 0
+    @pattern << colors.sample
+    @waiting = true
+  end
+
+  def pressed(button)
+    color = color_from_button(button)
+
+    if pattern[@current_index] == color
+      if @current_index + 1 == pattern.size
+        puts "winner!"
+        @waiting = false
+      else
+        @current_index += 1
+      end
+    else
+      puts "fail"
+      @pattern = []
+      @waiting = false
     end
+  end
+
+  def color_from_button(button)
+    stuff.keys.find { |k| stuff[k][:button] == button }
   end
 
   def current_round
@@ -42,12 +74,13 @@ class Game
   end
 
   def show_pattern
-    current_round.pattern.each do |color|
+    delay = 0.5
+    pattern.each do |color|
       led = led_for(color)
       led.on
-      sleep 1
+      sleep delay
       led.off
-      sleep 1
+      sleep delay
     end
   end
 end

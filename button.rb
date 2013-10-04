@@ -12,4 +12,10 @@ class Button
       block.call(self)
     end
   end
+
+  def released(&block)
+    PiPiper.after pin: pin_number, goes: :high do
+      block.call(self)
+    end
+  end
 end

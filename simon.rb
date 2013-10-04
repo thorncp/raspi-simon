@@ -21,7 +21,13 @@ at_exit do
 end
 
 game.pairs.each do |led, button|
-  button.pushed { led.toggle }
+  button.pushed do
+    if game.player_turn?
+      led.on
+      game.pressed(button)
+    end
+  end
+  button.released { led.off if game.player_turn? }
 end
 
 puts "alive..."
@@ -30,6 +36,7 @@ game.start
 
 loop do
   game.next_round
-  p game.current_round.pattern
+  # p game.pattern
   game.show_pattern
+  game.player_turn
 end
