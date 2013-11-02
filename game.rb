@@ -59,10 +59,10 @@ class Game
   def show_pattern
     delay = 0.5
     pattern.each do |pair|
+      sleep delay
       pair[:led].on
       sleep delay
       pair[:led].off
-      sleep delay
     end
   end
 end
