@@ -1,25 +1,13 @@
 class Game
-  attr_reader :stuff, :pattern
+  attr_reader :pairs, :pattern
 
-  def initialize(stuff)
-    @stuff = stuff
+  def initialize(pairs)
+    @pairs = pairs
     @pattern = []
   end
 
   def leds
-    stuff.map { |_, s| s[:led] }
-  end
-
-  def pairs
-    stuff.values.map { |s| [s[:led], s[:button]] }
-  end
-
-  def colors
-    stuff.keys
-  end
-
-  def led_for(color)
-    stuff[color][:led]
+    pairs.map { |p| p[:led] }
   end
 
   def start
@@ -43,14 +31,18 @@ class Game
 
   def next_round
     @current_index = 0
-    @pattern << colors.sample
+    @pattern << pairs.sample
     @waiting = true
   end
 
-  def pressed(button)
-    color = color_from_button(button)
+  def pair_from_button(button)
+    pairs.find { |p| p[:button] == button }
+  end
 
-    if pattern[@current_index] == color
+  def pressed(button)
+    pair = pair_from_button(button)
+
+    if pattern[@current_index] == pair
       if @current_index + 1 == pattern.size
         puts "winner!"
         @waiting = false
@@ -64,17 +56,12 @@ class Game
     end
   end
 
-  def color_from_button(button)
-    stuff.keys.find { |k| stuff[k][:button] == button }
-  end
-
   def show_pattern
     delay = 0.5
-    pattern.each do |color|
-      led = led_for(color)
-      led.on
+    pattern.each do |pair|
+      pair[:led].on
       sleep delay
-      led.off
+      pair[:led].off
       sleep delay
     end
   end
