@@ -32,6 +32,7 @@ class Game
   def next_round
     leds.each { |l| l.off }
     @current_index = 0
+    flashy if @pattern.empty?
     @pattern << pairs.sample
     @waiting = true
   end
@@ -64,6 +65,17 @@ class Game
       pair[:led].on
       sleep delay
       pair[:led].off
+    end
+  end
+
+  def flashy
+    5.times do
+      leds.each do |led|
+        sleep 0.05
+        led.on
+        sleep 0.05
+        led.off
+      end
     end
   end
 end
