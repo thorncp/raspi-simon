@@ -30,6 +30,7 @@ class Game
   end
 
   def next_round
+    leds.each { |l| l.off }
     @current_index = 0
     @pattern << pairs.sample
     @waiting = true
