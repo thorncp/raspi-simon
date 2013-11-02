@@ -9,10 +9,14 @@ game = Game.new(
   },
   {
     led: Led.new(24),
-    button: Button.new(17)
+    button: Button.new(27)
   },
   {
     led: Led.new(23),
+    button: Button.new(17)
+  },
+  {
+    led: Led.new(18),
     button: Button.new(4)
   }])
 
